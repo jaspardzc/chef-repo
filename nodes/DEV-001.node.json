@@ -1,0 +1,61 @@
+{
+  "name": "DEV-001.node",
+  "chef_environment": "DEV-001.env",
+  "run_list": [
+  "recipe[dev_git_cb::sync_chef_repo]",
+  "recipe[dev_docker_cb::create_network]",
+  "recipe[dev_docker_cb::default]",
+  "recipe[dev_tomcat_cb::stop_container]",
+  "recipe[dev_mongodb_cb::stop_container]",
+  "recipe[dev_httpd_cb::stop_container]",
+  "recipe[dev_springboot_cb::stop_container]",
+  "recipe[dev_restseed_cb::deploy]",
+  "recipe[dev_tomcat_cb::update_war]",
+  "recipe[dev_artifactory_cb::download_latest]",
+  "recipe[dev_tomcat_cb::update_ssl]",
+  "recipe[dev_tomcat_cb::update_keyvault]",
+  "recipe[dev_tomcat_cb::start_container]",
+  "recipe[dev_mongodb_cb::start_container]",
+  "recipe[dev_httpd_cb::start_container]",
+  "recipe[dev_springboot_cb::start_container]",
+  "role[common]"
+]
+,
+  "normal": {
+    "tags": [
+
+    ],
+    "microservice": [
+      {
+        "name": "restseed",
+        "version": "1.0.0-20161108.233301-94",
+        "snapshot": "1.0.0-SNAPSHOT"
+      }
+    ],
+    "tomcat": {
+      "warpath": "/dev/containers/dev-001/softwares/tomcat-a/webapps/",
+      "container": {
+        "name": "dev-tomcat-001",
+        "network": "dev-net-app"
+      }
+    },
+    "mongodb": {
+      "container": {
+        "name": "dev-mongodb-001",
+        "network": "dev-net-db"
+      }
+    },
+    "httpd": {
+      "container": {
+        "name": "dev-httpd-001",
+        "network": "dev-net-app"
+      }
+    },
+    "springboot": {
+      "container": {
+        "name": "dev-springboot-001",
+        "network": "dev-net-app"
+      }
+    }
+  }
+}

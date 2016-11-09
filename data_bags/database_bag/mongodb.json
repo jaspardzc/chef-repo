@@ -1,0 +1,8 @@
+{
+	"id": "mongodb",
+	"name": "mongodb",
+	"username": "admin",
+	"password": "7emsj!$wo",
+	"dbname": "dev_mongodb",
+	"dbhost": "10.90.78.21"
+}
