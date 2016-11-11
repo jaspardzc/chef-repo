@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: dev_idcard_Cb
+# Cookbook Name:: dev_restseed_Cb
 # Recipe:: default
 #
 # Copyright (c) 2016 The Authors, All Rights Reserved

@@ -15,7 +15,7 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[dev_idcard_cb::default]
+      - recipe[dev_restseed_cb::default]
     verifier:
       inspec_tests:
         - test/recipes
