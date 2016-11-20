@@ -1,18 +1,35 @@
-#
-# Cookbook Name:: dev_restseed_Cb
-# Recipe:: default
-#
-# Copyright (c) 2016 The Authors, All Rights Reserved
+####################################################################################
+# Cookbook Name: dev_restseed_cb
+# Recipe:: default.rb
+# Strategy: init recipe of restseed cookbook, concat parameters for other recipes
+# Copyright (c) 2016 The Auhtors, All Rights Reserved
+# Last Updated: 11/19/2016
+# Author: kevin.zeng
+#####################################################################################
 
 # manage required dependencies
 require_relative '../../dev_artifactory_cb/libraries/download_manager'
 
-# initalize local variables with node attributes
-ms_warpath = node['tomcat']['warpath']
-ms_name = node['microservice']['name']
-ms_version = node['microservice']['version']
-ms_snapshot = node['microservice']['snapshot']
+# local variables
+ms_warpath = ""
+ms_name = ""
+ms_version = ""
+ms_snapshot = ""
 
+# import available tomcat container list from node attributes
+tomcat = node['tomcat']['available']
+
+# iterate the tomcat container list and find matching microservice
+tomcat.each do |container|
+	if container['microservice']['name'] == "restseed-web"
+		ms_warpath = container['container_webapp']
+		ms_name = container['microservice']['name']
+		ms_version = container['microservice']['version']
+		ms_snapshot = container['microservice']['snapshot']
+	end
+end
+
+# import artifactory data from environment attributes
 artifactory_hostname = node['artifactory']['hostname']
 artifactory_port = node['artifactory']['port']
 artifactory_baseuri = node['artifactory']['baseuri']
@@ -28,6 +45,6 @@ _localmeta = ms_warpath + "/"
 _remotemeta = artifactory_hostname + ":" + artifactory_port + "/" + artifactory_baseuri + "/" + ms_name + "/" + ms_snapshot + "/"
 
 # invoke the default constructor of Download Manager
-dm = DownloadManager.new(_localuri, _remoteuri, _localmeta, _remotemeta)
+DownloadManager.new(_localuri, _remoteuri, _localmeta, _remotemeta)
 
 
