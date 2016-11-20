@@ -1,6 +1,6 @@
 {
-  "name": "DEV-001.env",
-  "description": "The development 001 Environment",
+  "name": "DEV",
+  "description": "The Development Environment",
   "cookbook_versions": {
 
   },
@@ -14,9 +14,12 @@
       "baseuri": "/artifactory/libs-snapshot/dev/"
     },
     "git": {
-      "remoteuri": "xxxxxxxxxxx",
-      "localuri": "/home/xxxx/chef-repo",
+      "remoteuri": "xxxxxxxxxx/",
+      "localuri": "/home/xxxx/chef-repo/",
       "secret_key_path": "/etc/chef/git_secret_key"
+    },
+    "keyvault": {
+      "secret_key_path": "/etc/chef/keyvault_secret_key"
     },
     "mongo": {
       "secret_key_path": "/etc/chef/mongo_secret_key"

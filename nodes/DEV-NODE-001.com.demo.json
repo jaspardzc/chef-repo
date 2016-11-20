@@ -1,0 +1,97 @@
+{
+  "name": "DEV-NODE-001.com.demo",
+  "chef_environment": "DEV",
+  "run_list": [
+  "recipe[dev_docker_cb::create_network]",
+  "recipe[dev_docker_cb::default]",
+  "recipe[dev_tomcat_cb::stop_container]",
+  "recipe[dev_mongodb_cb::stop_container]",
+  "recipe[dev_httpd_cb::stop_container]",
+  "recipe[dev_springboot_cb::stop_container]",
+  "recipe[dev_restseed_cb::default]",
+  "recipe[dev_restseed_cb::download]",
+  "recipe[dev_tomcat_cb::update_ssl]",
+  "recipe[dev_tomcat_cb::update_keyvault]",
+  "recipe[dev_tomcat_cb::start_container]",
+  "recipe[dev_mongodb_cb::start_container]",
+  "recipe[dev_httpd_cb::start_container]",
+  "recipe[dev_springboot_cb::start_container]",
+  "role[common]"
+]
+,
+  "normal": {
+    "tags": [
+
+    ],
+    "tomcat": {
+      "available": [
+        {
+          "container_name": "lcl-cnt-svc-001",
+          "container_network": "lcl-net",
+          "container_port": ["18443:8443", "18000:8000"],
+          "container_webapp": "/dev/containers/lcl-cnt-svc-001/softwares/tomcat-a/webapps/",
+          "microservice": {
+            "name": "restseed-web",
+            "version": "1.0.0-20161114.092525-106",
+            "snapshot": "1.0.0-SNAPSHOT"
+          }
+        },
+        {
+          "container_name": "lcl-cnt-svc-002",
+          "container_network": "lcl-net",
+          "container_port": ["28443:8443", "28000:8000"],
+          "container_webapp": "/dev/containers/lcl-cnt-svc-001/softwares/tomcat-a/webapps/",
+          "microservice": {
+            "name": "restseed-web",
+            "version": "1.0.0-20161111.093130-141",
+            "snapshot": "1.0.0-SNAPSHOT"
+          }
+        }
+      ],
+      "removed": [
+      
+      ]
+    },
+    "mongodb": {
+      "available": [
+        {
+          "container_name": "lcl-cnt-mon-001",
+          "container_network": "lcl-net",
+          "container_port": ["27017:27017"]
+        },
+        {
+          "container_name": "lcl-cnt-mon-002",
+          "container_network": "lcl-net",
+          "container_port": ["17017:27017"]
+        }
+      ],
+      "removed": [
+      
+      ]
+    },
+    "httpd": {
+      "available": [
+        {
+          "container_name": "lcl-cnt-wbs-001",
+          "container_network": "lcl-net",
+          "container_port": ["50443:443"]
+        }
+      ],
+      "removed": [
+      
+      ]
+    },
+    "springboot": {
+      "available": [
+        {
+          "container_name": "lcl-cnt-spring-001",
+          "container_network": "lcl-net",
+          "container_port": ["9000:9000"]
+        }
+      ],
+      "removed": [
+      
+      ]
+    }
+  }
+}

@@ -10,8 +10,8 @@
   },
   "chef_type": "role",
   "run_list": [
+    "recipe[dev_git_cb::sync_chef_repo]"
   ],
   "env_run_lists": {
-
   }
 }
