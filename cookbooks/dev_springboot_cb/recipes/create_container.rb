@@ -18,7 +18,7 @@ springboot.each do |container|
   # using docker resource to create new docker container
   docker_container "create_springboot_container: #{container['container_name']}" do
     container_name "#{container['container_name']}"
-    repo 'DEV-050.node:8082/stdspringbootbox'
+    repo 'DEV-NODE-050.com.demo:8082/stdspringbootbox'
     tag '1.0'
     host_name "#{container['container_name']}.ssphosting.net"
     memory Integer('4000000000')

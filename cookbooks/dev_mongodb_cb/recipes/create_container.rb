@@ -18,7 +18,7 @@ mongodb.each do |container|
   # using docker resource to create new docker container
   docker_container "create_mongodb_container: #{container['container_name']}" do
     container_name "#{container['container_name']}"
-    repo 'DEV-050.node:8082/stdmongobox'
+    repo 'DEV-NODE-050.com.demo:8082/stdmongobox'
     tag '2.0'
     host_name "#{container['container_name']}.ssphosting.net"
     memory Integer('4000000000')
