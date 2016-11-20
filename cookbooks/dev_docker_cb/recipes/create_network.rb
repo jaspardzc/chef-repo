@@ -1,6 +1,12 @@
-# recipe create_network
-# cookbook dev_docker_cb
-# purpose create dedicated docker networks
+####################################################################################
+# Cookbook Name: dev_docker_cb
+# Recipe:: create_network
+# Strategy: create docker networks
+# Copyright (c) 2016 The Auhtors, All Rights Reserved
+# Last Updated: 11/19/2016
+# Author: kevin.zeng
+#####################################################################################
+
 
 # Manage dependencies
 require 'docker'
