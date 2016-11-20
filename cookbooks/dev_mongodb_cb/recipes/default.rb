@@ -1,8 +1,10 @@
-#
-# Cookbook Name:: dev_mongodb_cb
+####################################################################################
+# Cookbook Name: dev_mongodb_cb
 # Recipe:: default
-#
-# Copyright (c) 2016 The Authors, All Rights Reserved.
+# Strategy: keep clean
+# Copyright (c) 2016 The Auhtors, All Rights Reserved
+# Last Updated: 11/19/2016
+# Author: kevin.zeng
+#####################################################################################
 
-
-# Keep Clean
+Chef::Log.info("this is dev_mongodb_cb default recipe")

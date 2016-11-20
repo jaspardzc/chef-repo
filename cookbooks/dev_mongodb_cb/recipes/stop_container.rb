@@ -1,19 +1,25 @@
-#
+####################################################################################
 # Cookbook Name: dev_mongodb_cb
 # Recipe:: stop_container
-# 
+# Strategy: stop the mongodb container iteratively
 # Copyright (c) 2016 The Auhtors, All Rights Reserved
+# Last Updated: 11/19/2016
+# Author: kevin.zeng
+#####################################################################################
 
-# Manage required dependencies
+# import dependencies
 require 'docker'
 
-# get container name from environemnt attribute
-container_name = node['mongodb']['container']['name']
-container_network = node['mongodb']['container']['network']
+# import available mongodb container list from node attributes
+mongodb = node['mongodb']['available']
 
-# stop container using docker_container resource 
-docker_container 'stop_mongodb_container' do
-    container_name "#{container_name}"
-    network_mode "#{container_network}"
-    action :stop
+# stop the containers if the webapp version is outdated
+mongodb.each do |container|
+	# stop container using docker_container resource 
+	docker_container 'stop_mongodb_container' do
+	    container_name "#{container['container_name']}"
+	    network_mode "#{container['container_network']}"
+	    action :stop
+	end
 end
+
