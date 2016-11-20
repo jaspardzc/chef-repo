@@ -1,17 +1,14 @@
-# recipe for update ssl
-# tomcat cookbook
-
-# check if ssl update is required. stop the container if the container is running
-# remove the old certs folder
-# create an empty certs folder
-# fetch new ssl certifications, private key, pem file from environment level data bag
-# throw exception of the recipe flow aborted with any error
-
-# Manage dependencies
-require_relative '../../dev_docker_cb/libraries/docker_service'
-
-# Read Container name from Node attribute
-container_name = node['tomcat']['container']['name']
+####################################################################################
+# Cookbook Name: dev_tomcat_cb
+# Recipe:: update_ssl
+# Strategy: remove the old certs folder for ssl keys
+#           fetch update ssl certifications, private key, pem file from environment
+#           level data bag
+#           create the new certs folder containing ssl keys
+# Copyright (c) 2016 The Auhtors, All Rights Reserved
+# Last Updated: 11/19/2016
+# Author: kevin.zeng
+#####################################################################################
 
 # Read SSL Secret Key Path
 secret_key_path = node['ssl']['secret_key_path']
@@ -29,8 +26,8 @@ certs_internal = '/dev/containers/certs/internal'
 
 # delete the old ssl external config directory and create empty directory
 directory "#{certs_external}" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     recursive true
     action [ :delete, :create ]
@@ -38,8 +35,8 @@ end
 
 # delete the old ssl internal config directory and create empty directory
 directory "#{certs_internal}" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     recursive true
     action [ :delete, :create ]
@@ -47,8 +44,8 @@ end
 
 # fetch the external private key from data bag item
 file "#{certs_external}/private.key" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_external['private_key']}"
     action :create
@@ -56,8 +53,8 @@ end
 
 # fetch the internal private key from data bag item
 file "#{certs_internal}/private.key" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_internal['private_key']}"
     action :create
@@ -65,8 +62,8 @@ end
 
 # fetch the external encrypted private key from data bag item
 file "#{certs_external}/privateencrypted.key" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_external['private_key_encrypted']}"
     action :create
@@ -74,8 +71,8 @@ end
 
 # fetch the internal encrypted private key from data bag item
 file "#{certs_internal}/privateencrypted.key" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_internal['private_key_encrypted']}"
     action :create
@@ -83,8 +80,8 @@ end
 
 # fetch the external public certificate from data bag item
 file "#{certs_external}/public.crt" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_external['public_crt']}"
     action :create
@@ -92,8 +89,8 @@ end
 
 # fetch the internal public certificate from data bag item
 file "#{certs_internal}/public.crt" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_internal['public_crt']}"
     action :create
@@ -101,8 +98,8 @@ end
 
 # fetch the external certificate pem from data bag item
 file "#{certs_external}/certificate.pem" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_external['certificate_pem']}"
     action :create
@@ -110,11 +107,9 @@ end
 
 # fetch the internal certificate pem from data bag item
 file "#{certs_internal}/certificate.pem" do
-    owner 'admin'
-    group 'admin'
+    owner 'devadmin'
+    group 'devadmin'
     mode '0755'
     content "#{ssl_internal['certificate_pem']}"
     action :create
 end
-
-
