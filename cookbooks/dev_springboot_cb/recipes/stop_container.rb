@@ -1,20 +1,26 @@
-#
-# Cookbook Name:: dev_springboot_cb
+####################################################################################
+# Cookbook Name: dev_springboot_cb
 # Recipe:: stop_container
-#
-# Copyright (c) 2016 The Authors, All Rights Reserved.
+# Strategy: stop the springboot container iteratively
+# Copyright (c) 2016 The Auhtors, All Rights Reserved
+# Last Updated: 11/19/2016
+# Author: kevin.zeng
+#####################################################################################
 
-# Manage required dependencies
+# import dependencies
 require 'docker'
 
-# Get Mongod container by container name
-container_name = node['springboot']['container']['name']
-container_network = node['springboot']['container']['network']
+# import available springboot container list from node attributes
+springboot = node['springboot']['available']
 
-# stop container using docker_container resource
-docker_container 'stop_springboot_container' do
-    container_name "#{container_name}"
-    network_mode "#{container_network}"
-    kill_after 10
-    action :stop
+# stop the containers if the webapp version is outdated
+springboot.each do |container|
+	# stop container using docker_container resource 
+	docker_container 'stop_springboot_container' do
+	    container_name "#{container['container_name']}"
+	    network_mode "#{container['container_network']}"
+	    kill_after 10
+	    action :stop
+	end
 end
+
