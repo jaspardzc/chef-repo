@@ -11,11 +11,21 @@
       "secret_key_path": "/etc/chef/artifactory_secret_key",
       "hostname": "10.90.78.5",
       "port": "8081",
-      "baseuri": "/artifactory/libs-snapshot/dev/"
+      "baseuri": "/artifactory/libs-snapshot/demo/"
     },
     "git": {
-      "remoteuri": "xxxxxxxxxx/",
-      "localuri": "/home/xxxx/chef-repo/",
+      "repositories": [
+        {
+          "name": "chefconfig",
+          "remoteuri": "xxxxxxx/chefconfig",
+          "localuri": "/home/tzfadmin/chef-repo/chefconfig"
+        },
+        {
+          "name": "chefscripts",
+          "remoteuri": "xxxxxxx/chefscripts",
+          "localuri": "/home/tzfadmin/chef-repo/chefscripts"
+        }
+      ],
       "secret_key_path": "/etc/chef/git_secret_key"
     },
     "keyvault": {

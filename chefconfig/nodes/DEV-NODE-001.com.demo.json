@@ -34,7 +34,8 @@
             "name": "restseed-web",
             "version": "1.0.0-20161114.092525-106",
             "snapshot": "1.0.0-SNAPSHOT"
-          }
+          },
+          "keyvault_update": true
         },
         {
           "container_name": "lcl-cnt-svc-002",
@@ -45,7 +46,8 @@
             "name": "restseed-web",
             "version": "1.0.0-20161111.093130-141",
             "snapshot": "1.0.0-SNAPSHOT"
-          }
+          },
+          "keyvault_update": true
         }
       ],
       "removed": [

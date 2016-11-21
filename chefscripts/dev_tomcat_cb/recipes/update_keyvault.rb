@@ -47,33 +47,35 @@ tomcat.each do |container|
     # shared keyvault command string for initKeyStore, setKeyStore, getKeyStore
     common_keyvault_cmd = "#{keystore_path} #{keystore_pwd} #{keystore_path} #{keystore_pwd} #{keystore_path} #{keystore_pwd}"
 
-    # delete the old keyvault directory and create empty directory
-    directory "#{keystore_path}" do
-        owner 'devadmin'
-        group 'devadmin'
-        mode  '0755'
-        recursive true
-        action [ :delete, :create ]
-    end
+    if container['keyvault_update'] == true
+        # delete the old keyvault directory and create empty directory
+        directory "#{keystore_path}" do
+            owner 'devadmin'
+            group 'devadmin'
+            mode  '0755'
+            recursive true
+            action [ :delete, :create ]
+        end
 
-    # initialize the keyvault when creating the container
-    execute 'keyvault_init' do
-        group 'devadmin'
-        command "#{java_path} -cp #{jar_path} #{keystore_init_method} #{common_keyvault_cmd} #{container_name}"
-        action :run
-    end
+        # initialize the keyvault when creating the container
+        execute 'keyvault_init' do
+            group 'devadmin'
+            command "#{java_path} -cp #{jar_path} #{keystore_init_method} #{common_keyvault_cmd} #{container_name}"
+            action :run
+        end
 
-    # set the keyvault 
-    execute 'keyvault_set' do
-        group 'devadmin'
-        command "#{java_path} -cp #{jar_path} #{keystore_set_method} #{common_keyvault_cmd} #{container_name} #{mongo_name}.#{mongo_user} #{mongo_pwd}"
-        action :run
-    end
+        # set the keyvault 
+        execute 'keyvault_set' do
+            group 'devadmin'
+            command "#{java_path} -cp #{jar_path} #{keystore_set_method} #{common_keyvault_cmd} #{container_name} #{mongo_name}.#{mongo_user} #{mongo_pwd}"
+            action :run
+        end
 
-    # get the keyvault data from store and print it in the console
-    execute 'keyvault_get' do
-        group 'devadmin'
-        command "#{java_path} -cp #{jar_path} #{keystore_get_method} #{common_keyvault_cmd} #{container_name} #{mongo_name}.#{mongo_user}"
-        action :run 
+        # get the keyvault data from store and print it in the console
+        execute 'keyvault_get' do
+            group 'devadmin'
+            command "#{java_path} -cp #{jar_path} #{keystore_get_method} #{common_keyvault_cmd} #{container_name} #{mongo_name}.#{mongo_user}"
+            action :run 
+        end
     end
 end
