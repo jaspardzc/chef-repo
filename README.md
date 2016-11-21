@@ -8,6 +8,8 @@ All development cookbooks will start with prefix `dev_`
 
 Directory `chefconfig` contains node, roles, environments, and data bags related json configuration files. 
 
+In the actual DevOps Environment, it is recommended to have separate reposiotories for the `chefscripts` and `chefconfig` directory. And separating the community cookbooks from development cookbooks rather than keeping them all under one single MonoRepository.
+
 Chef References
 ===========
 Official Website
