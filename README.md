@@ -10,6 +10,8 @@ Directory `chefconfig` contains node, roles, environments, and data bags related
 
 In the actual DevOps Environment, it is recommended to have separate reposiotories for the `chefscripts` and `chefconfig` directory. And separating the community cookbooks from development cookbooks rather than keeping them all under one single MonoRepository.
 
+For new chef node environment setup, checkout the last section of this README.
+
 Chef References
 ===========
 Official Website
@@ -233,6 +235,18 @@ Chef-Apply
 Running recipe or single ruby file without cookbooks
 
     ~$ chef-apply /path/FILE_NAME.rb
+
+Chef Environment Manually Setup (For Linux Kernel 4.x+)
+=======================================================
+
+This section is a sample guideline for manually chef environment setup,especially useful for 
+
+Chef Server
+-----------
+Chef Development Workstation (ChefDK)
+-----------
+Chef Client(Chef Node)
+-----------
 
 
 Chef Basics
