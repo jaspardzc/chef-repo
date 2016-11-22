@@ -1,0 +1,13 @@
+{
+  "name": "DEV-NODE-002.com.demo",
+  "chef_environment": "DEV",
+  "run_list": [
+    "role[common]"
+  ]
+  ,
+  "normal": {
+    "tags": [
+
+    ]
+  }
+}
