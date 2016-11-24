@@ -18,12 +18,12 @@
         {
           "name": "chefconfig",
           "remoteuri": "xxxxxxx/chefconfig",
-          "localuri": "/home/tzfadmin/chef-repo/chefconfig"
+          "localuri": "/home/devadmin/chef-repo/chefconfig"
         },
         {
           "name": "chefscripts",
           "remoteuri": "xxxxxxx/chefscripts",
-          "localuri": "/home/tzfadmin/chef-repo/chefscripts"
+          "localuri": "/home/devadmin/chef-repo/chefscripts"
         }
       ],
       "secret_key_path": "/etc/chef/git_secret_key"

@@ -4,7 +4,7 @@
 # Strategy: upload chefnodes from chefdk to chef server, which will automatically
 # 			update all chef server data about nodes, environments, roles
 # Copyright (c) 2016 The Auhtors, All Rights Reserved
-# Last Updated: 11/21/2016
+# Last Updated: 11/23/2016
 # Author: kevin.zeng
 #####################################################################################
 
@@ -27,17 +27,13 @@ ruby_block 'load latest chef node properties' do
 	block do
 		# find the local repository contains node related files
 		repositories.each do |repository|
-			if repository['name'] == "22700_chefnodes"
+			if repository['name'] == "chefconfig"
 				node_local_repo = repository['localuri']
 			end
 			break
 		end
-		# local chef roles directory
-		node_local_repo_roles = Dir.glob("#{node_local_repo}/roles/")
-		# local chef environment directory
-		node_local_repo_envs =Dir.glob("#{node_local_repo}/environments/")
 		# read the chef node properties from chef node local node repository
-		filenames = Dir.glob("#{node_local_repo}/nodes/")
+		filenames = Dir.glob("#{node_local_repo}/nodes/**/*")
 		filenames.each do |filename| 
 			name = String.new("#{filename}")
 			pattern = String.new("#{node['name']}")
@@ -54,27 +50,28 @@ ruby_block 'load latest chef node properties' do
 end
 
 # chef_node resource, update curent local node
-chef_node 'update chef node' do
-	chef_environment node_chef_env
-	name "#{node['name']}"
-	run_list node_runlist
-	normal_attributes node_normal_attrs
+chef_node "#{node.name}" do
+	chef_environment lazy { node_chef_env }
+	run_list lazy { node_runlist } 
+	normal_attributes lazy { node_normal_attrs }
 end
 
 # chef_role resource, update all available chef environments iteratively
-node_local_repo_envs.each do |env|
+node_local_repo_envs = lambda { Dir.glob("#{node_local_repo}/environments/**/*") }
+node_local_repo_envs.call.each do |env|
 	execute 'update all chef environments' do
 		group 'devadmin'
-		command "knife environment from file #{node_local_repo}/#{env}"
+		command "knife environment from file #{env}"
 		action :run
 	end
 end
 
 # chef_role resource, update all available chef roles iteratively
-node_local_repo_roles.each do |role|
+node_local_repo_roles = lambda { Dir.glob("#{node_local_repo}/roles/**/*") }
+node_local_repo_roles.call.each do |role|
 	execute 'update all chef roles' do
 		group 'devadmin'
-		command "knife role from file #{node_local_repo}/#{role}"
+		command "knife role from file #{role}"
 		action :run
 	end
 end

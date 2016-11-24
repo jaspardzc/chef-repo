@@ -5,6 +5,7 @@
     "recipe[dev_git_cb::sync_chef_repo]",
     "recipe[dev_git_cb::sync_ms_config]",
     "recipe[dev_git_cb::upload_chefscripts]",
+    "recipe[dev_git_cb::upload_chefnodes]",
     "recipe[dev_docker_cb::create_network]",
     "recipe[dev_docker_cb::default]",
     "recipe[dev_tomcat_cb::stop_container]",
@@ -33,7 +34,7 @@
           "container_network": "lcl-net",
           "container_port": ["18443:8443", "18000:8000"],
           "container_webapp": "/dev/containers/lcl-cnt-svc-001/softwares/tomcat-a/webapps/",
-          "container_appconfig": "/tzf/containers/lcl-cnt-svc-001/softwares/appconfig",
+          "container_appconfig": "/dev/containers/lcl-cnt-svc-001/softwares/appconfig",
           "microservice": {
             "name": "restseed-web",
             "version": "1.0.0-20161114.092525-106",
@@ -46,7 +47,7 @@
           "container_network": "lcl-net",
           "container_port": ["28443:8443", "28000:8000"],
           "container_webapp": "/dev/containers/lcl-cnt-svc-002/softwares/tomcat-a/webapps/",
-          "container_appconfig": "/tzf/containers/lcl-cnt-svc-002/softwares/appconfig",
+          "container_appconfig": "/dev/containers/lcl-cnt-svc-002/softwares/appconfig",
           "microservice": {
             "name": "restseed-web",
             "version": "1.0.0-20161111.093130-141",
