@@ -246,29 +246,38 @@ Chef Server
 1. download chef server rpm image, check Linux/Unix version on the chef official website
 2. login as root
 3. adding the ip address mapping in the /etc/hosts for the chef server
+
     ```
     xx.xx.xx.xx chefserver.companyname.projectname.com
     ```
+
 4. install openssl, download the tar and ftp it to the chef server VM
 5. add group and user 
+
     ```
     ~$ groupadd -g 751 opscode
     ~$ useradd -m -d /home/opscode -u 751 -g 751 -p opscode opscode
     ~$ useradd -m -d /home/opscode-pgsql -u 752 -g 751 -p opscode opscode-pgsql
     ```
+
 6. install chef server
+
     ```
     ~$ rpm -Uvh chef.xxxxx.rpm
     ~$ chef-server-ctl reconfigure
     ```
+
 7. generate PEM files for authentication with chef client
+
     ```
     ~$ chef-server-ctl user-create admin admin admin admin@trizetto.com 'admin123' --filename admin.pem
     ~$ chef-server-ctl org-create trizetto 'TriZetto Inc' --association_user admin --filename trizetto-validator.pem
     ~$ chef-server-ctl user-create devadmin dev admin devadmin@trizetto.com 'devadmin' --filename /etc/chef/devadmin.pem
     ~$ chef-server-ctl org-user-add trizetto devadmin
     ```
+
 8. install the chef manage
+
     ```
     # download chef-managexxx.rpm
     ~$ rpm -Uvh chef-managexxx.rpm
@@ -276,33 +285,41 @@ Chef Server
     # install chef manage using chef-server-ctl
     ~$ chef-server-ctl install chef-manage /opt/chef-manage/LICENSES/libffi-LICENSE
     ```
+
 Chef Development Workstation (ChefDK)
 -------------------------------------
 1. install the ChefkDK rpm image, check Linux/Unix version on chef official website (ChefDK will automatically have knife, chef-client, kitchen, berkshelf installed)
 2. add ruby and gem to the system path
+
     ```
     ~$ export PATH=$PATH:/opt/chefdk/embedded/bin
     ~$ which ruby
     ~$ which gem
     ```
+
 3. same as Chef Client configuration, see below
 Chef Client(Chef Node)
 ----------------------
 1. install the Chef.xxx.rpm, check Linux/Unix version on the chef official website, login the chefserver admin UI, create a client and download new client pem key, put at `/root/.chef/client.pem`
 2. add ruby and gem to the system path
+
     ```
     ~$ export PATH=$PATH:/opt/chefdk/embedded/bin
     ~$ which ruby
     ~$ which gem
     ```
+
 3. create knife.rb at /root/.chef/
+
     ```
     ~$ sudo su -
     ~$ mkdir /root/.chef/
     ~$ vi /root/.chef/knife.rb (optionally, ~$ knife configure -i)
     ~$ exit
     ```
+    
     /root/.chef/knife.rb reference
+
     ```
     log_level                   :info
     log_location                STDOUT
@@ -313,14 +330,18 @@ Chef Client(Chef Node)
     chef_server_url             'https://chefserver.example.com:443/organizations.example'
     syntax_check_cache_path     '/root/.chef/syntax_check_cache'
     ```
+
 4. create knife.rb at ~/.chef/
+
     ```
     ~$ sudo su - devadmin
     ~$ mkdir ~/.chef/
     ~$ vi /root/.chef/knife.rb (optionally, ~$ knife configure -i)
     ~$ exit
     ```
-    ~/.chef/knife.rb reference
+
+   ~/.chef/knife.rb reference
+
     ```
     current_dir = File.dirname(__FILE__)
     log_level                   :info
@@ -330,11 +351,15 @@ Chef Client(Chef Node)
     chef_server_url             'https://chefserver.example.com:443/organizations.example'
     cookbook_path               ["#{current_dir}/../chef-repo/chefscripts/cookbooks"]
     ```
+
 5. create knife.rb at /etc/chef/
+
     ```
     ~$ vi /etc/chef/client.rb
     ```
+
     /etc/chef/client.rb reference
+
     ```
     log_level                   :info
     log_location                STDOUT
@@ -344,22 +369,30 @@ Chef Client(Chef Node)
     chef_server_url             'https://chefserver.example.com:443/organizations.example'
     trusted_certs_dir           '/root/.chef/trusted_certs'
     ```
+
 6. added the chef server IP address into /etc/hosts 
+
     ```
     # chef server
     xx.xx.xx.xx chefserver.example.com
     ```
+
 7. puts admin.pem and example-validator.pem inside /root/.chef/ and /etc/chef/
 8. download certification from chef server, which will be put under /root/.chef/trusted_certs/
+
     ```
     ~$ knife ssl fetch
     ~$ knife ssl check
     ```
+
 9. register the chef node with chef server
+
     ```
     ~$ chef-client -S https://chefserver.example.com/organizations/example -K /etc/chef/example-validator.pem
     ```
+
 10. verify the chef-client configuration setup
+
     ```
     ~$ knife client-list -w
     ```
