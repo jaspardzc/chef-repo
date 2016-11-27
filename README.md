@@ -243,34 +243,226 @@ This section is a sample guideline for manually chef environment setup,especiall
 
 Chef Server
 -----------
+1. download chef server rpm image, check Linux/Unix version on the chef official website
+2. login as root
+3. adding the ip address mapping in the /etc/hosts for the chef server
+    ```
+    xx.xx.xx.xx chefserver.companyname.projectname.com
+    ```
+4. install openssl, download the tar and ftp it to the chef server VM
+5. add group and user 
+    ```
+    ~$ groupadd -g 751 opscode
+    ~$ useradd -m -d /home/opscode -u 751 -g 751 -p opscode opscode
+    ~$ useradd -m -d /home/opscode-pgsql -u 752 -g 751 -p opscode opscode-pgsql
+    ```
+6. install chef server
+    ```
+    ~$ rpm -Uvh chef.xxxxx.rpm
+    ~$ chef-server-ctl reconfigure
+    ```
+7. generate PEM files for authentication with chef client
+    ```
+    ~$ chef-server-ctl user-create admin admin admin admin@trizetto.com 'admin123' --filename admin.pem
+    ~$ chef-server-ctl org-create trizetto 'TriZetto Inc' --association_user admin --filename trizetto-validator.pem
+    ~$ chef-server-ctl user-create devadmin dev admin devadmin@trizetto.com 'devadmin' --filename /etc/chef/devadmin.pem
+    ~$ chef-server-ctl org-user-add trizetto devadmin
+    ```
+8. install the chef manage
+    ```
+    # download chef-managexxx.rpm
+    ~$ rpm -Uvh chef-managexxx.rpm
+    ~$ chef-manage-ctl reconfigure
+    # install chef manage using chef-server-ctl
+    ~$ chef-server-ctl install chef-manage /opt/chef-manage/LICENSES/libffi-LICENSE
+    ```
 Chef Development Workstation (ChefDK)
------------
+-------------------------------------
+1. install the ChefkDK rpm image, check Linux/Unix version on chef official website (ChefDK will automatically have knife, chef-client, kitchen, berkshelf installed)
+2. add ruby and gem to the system path
+    ```
+    ~$ export PATH=$PATH:/opt/chefdk/embedded/bin
+    ~$ which ruby
+    ~$ which gem
+    ```
+3. same as Chef Client configuration, see below
 Chef Client(Chef Node)
------------
+----------------------
+1. install the Chef.xxx.rpm, check Linux/Unix version on the chef official website, login the chefserver admin UI, create a client and download new client pem key, put at `/root/.chef/client.pem`
+2. add ruby and gem to the system path
+    ```
+    ~$ export PATH=$PATH:/opt/chefdk/embedded/bin
+    ~$ which ruby
+    ~$ which gem
+    ```
+3. create knife.rb at /root/.chef/
+    ```
+    ~$ sudo su -
+    ~$ mkdir /root/.chef/
+    ~$ vi /root/.chef/knife.rb (optionally, ~$ knife configure -i)
+    ~$ exit
+    ```
+    /root/.chef/knife.rb reference
+    ```
+    log_level                   :info
+    log_location                STDOUT
+    node_name                   'admin'
+    client_key                  '/root/.chef/admin.pem'
+    validation_client_name      'example-validator'
+    validation_key              '/root/.chef/example-validator.pem'
+    chef_server_url             'https://chefserver.example.com:443/organizations.example'
+    syntax_check_cache_path     '/root/.chef/syntax_check_cache'
+    ```
+4. create knife.rb at ~/.chef/
+    ```
+    ~$ sudo su - devadmin
+    ~$ mkdir ~/.chef/
+    ~$ vi /root/.chef/knife.rb (optionally, ~$ knife configure -i)
+    ~$ exit
+    ```
+    ~/.chef/knife.rb reference
+    ```
+    current_dir = File.dirname(__FILE__)
+    log_level                   :info
+    log_location                STDOUT
+    node_name                   'devadmin'
+    client_key                  "#{current_dir}/.chef/devadmin.pem"
+    chef_server_url             'https://chefserver.example.com:443/organizations.example'
+    cookbook_path               ["#{current_dir}/../chef-repo/chefscripts/cookbooks"]
+    ```
+5. create knife.rb at /etc/chef/
+    ```
+    ~$ vi /etc/chef/client.rb
+    ```
+    /etc/chef/client.rb reference
+    ```
+    log_level                   :info
+    log_location                STDOUT
+    node_name                   'admin'
+    validation_client_name      'example-validator'
+    validation_key              '/etc/chef/example-validator.pem'
+    chef_server_url             'https://chefserver.example.com:443/organizations.example'
+    trusted_certs_dir           '/root/.chef/trusted_certs'
+    ```
+6. added the chef server IP address into /etc/hosts 
+    ```
+    # chef server
+    xx.xx.xx.xx chefserver.example.com
+    ```
+7. puts admin.pem and example-validator.pem inside /root/.chef/ and /etc/chef/
+8. download certification from chef server, which will be put under /root/.chef/trusted_certs/
+    ```
+    ~$ knife ssl fetch
+    ~$ knife ssl check
+    ```
+9. register the chef node with chef server
+    ```
+    ~$ chef-client -S https://chefserver.example.com/organizations/example -K /etc/chef/example-validator.pem
+    ```
+10. verify the chef-client configuration setup
+    ```
+    ~$ knife client-list -w
+    ```
 
+Chef Design Pattern Best Practice
+=================================
 
-Chef Basics
-===============
+Top 1 Question: The Berkshelf Way or Role-based Way? Followed are some links for reference, you can google more debates on this.
 
-The chef-repo
--------------
-All installations require a central workspace known as the chef-repo. This is a place where primitive objects--cookbooks, roles, environments, data bags, and chef-repo configuration files--are stored and managed.
+[Write Reusable Chef Cookbooks, No Roles](http://devopsanywhere.blogspot.com/2012/11/how-to-write-reusable-chef-cookbooks.html)
 
-The chef-repo should be kept under version control, such as [git](http://git-scm.org), and then managed as if it were source code.
+[Chef Roles are not Evil](https://blog.chef.io/2013/11/19/chef-roles-arent-evil/)
 
-Knife Configuration
+[Chef Cookbooks Anti Patterns](http://dougireton.com/blog/2013/02/16/chef-cookbook-anti-patterns/)
+
+In the chef world, some people advocates against setting attributes and runlist in roles, or even not using roles at all. The main concerns of these people are:
+
+    Roles are not versioned and shared across all the nodes and environments
+    Roles cannot be namespaced
+    Roles cannot be packages and distributed
+    Roles added additional setup complexity for the user
+
+The Chef Official Documentation says:
+
+    A role is a way to define certain patterns and processes that exist across nodes in an organization as belonging to a single job function. Each role consists of zero (or more) attributes and a run list.
+
+It is very much like the Spring AOP, dealing with cross-cutting concern, providing reusable components that can be easily maintained and embedded for any environement and node usage. 
+
+Roles will be evaludated during the chef-client run, the roles atrributes will be merged into the node and environment based on attribute precedence, the roles runlist will be embedded in the node runlist if you have include the roles in your node runlist. 
+
+But, we should be cautious when using roles within different environments, roles are not suitable for every scenarios. Whenever you modify a recipe in the role runlist or modify a attribute in the role, it will be immediately reflected on all the nodes that are using this shared role.
+
+Generally, there are two ways to use roles.
+
+The Classical Way
 -------------------
-Knife is the [command line interface](https://docs.chef.io/knife.html) for Chef. The chef-repo contains a .chef directory (which is a hidden directory by default) in which the Knife configuration file (knife.rb) is located. This file contains configuration settings for the chef-repo.
+1. Use Roles for every entities like webservers, databases, services, etc. If we want the role to behave differently in different environments, we need to set some environment override attributes to override the default attribute value declared in the role.
 
-The knife.rb file is automatically created by the starter kit. This file can be customized to support configuration settings used by [cloud provider options](https://docs.chef.io/plugin_knife.html) and custom [knife plugins](https://docs.chef.io/plugin_knife_custom.html).
+2. If we want the role to behave differently in different nodes, we need to set some force_override attributes to override the default attribute value declared in the role.
 
-Also located inside the .chef directory are .pem files, which contain private keys used to authenticate requests made to the Chef server. The USERNAME.pem file contains a private key unique to the user (and should never be shared with anyone). The ORGANIZATION-validator.pem file contains a private key that is global to the entire organization (and is used by all nodes and workstations that send requests to the Chef server).
+But this approach will definitely resulted in repeatly adding a lot of force override attribute all over the places if your application stack is very complex. (Countless Environments and Nodes)
 
-Cookbooks
----------
-A cookbook is the fundamental unit of configuration and policy distribution. 
+Maybe a Better Way (Role-based Cookbook)
+----------------------------------------
 
-Roles
------
-Roles provide logical grouping of cookbooks and other roles. 
+Make use of the power of cookbooks, because cookbooks can be versioned.
+There are three types of cookbooks.
+
+```
+Library Cookbook/Community Cookbook
+Application Cookbook
+Role/Wrapper Cookbook
+```
+
+And we are going to use the role/wrapper cookbook to achieve this:
+
+1. Create a wrapper cookbook for each entity role, add the default recipe of this wrapper cookbook inside the entity role.
+
+    for the role runlist
+
+    ```
+    "run_list": [
+      "role[webserver]",
+      "recipe[webserver]"
+    ]
+    ```
+
+2. Using include_recipe to include multiple recipes in the default recipe of this wrapper cookbook.
+
+    for the default.rb of wrapper cookbook webserver
+    
+    ```
+    include_recipe "cts_git_cb::syn_chef_repo"
+    include_recipe "cts_git_cb::sync_ms_config"
+    include_recipe "cts_git_cb::upload_chefscripts"
+    .....
+    include_recipe "cts_tomcat_cb::stop_container"
+    ....
+    ```
+
+3. When you want the roles to behave differently in different environments and node, simply distributing another version of this wrapper cookbook.
+
+    for the role runlist in QA Environment
+    
+    ```
+    "run_list": [
+      "role[webserver]",
+      "recipe[webserver@2.0.0]"
+    ]
+    ```
+
+    for the role runlist in PROD Environment
+    
+    ```
+    "run_list": [
+      "role[webserver]",
+      "recipe[webserver@1.5.0]"
+    ]
+    ```
+
+4. Happily use roles, no need to pollute the node attributes and messy around the node default runlist
+
+
+Open Topics
+===========
 
