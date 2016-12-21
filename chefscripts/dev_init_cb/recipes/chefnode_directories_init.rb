@@ -9,3 +9,18 @@
 # Author: kevin.zeng
 #####################################################################################
 
+# create containers root directory
+directory '/dev/containers' do
+	owner 'devadmin'
+	group 'devadmin'
+	mode '0755'
+	action [ :create]
+end
+
+# create containers backup directory
+directory '/backup/containers' do
+	owner 'devadmin'
+	group 'devadmin'
+	mode '0755'
+	action [ :create]
+end

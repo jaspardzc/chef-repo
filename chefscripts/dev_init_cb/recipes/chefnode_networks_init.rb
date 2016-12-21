@@ -8,3 +8,17 @@
 # Author: kevin.zeng
 #####################################################################################
 
+# create docker network
+docker_network 'dev-net' do
+	action :create
+end
+
+# create docker network
+docker_network 'dev-net-db' do
+	action :create
+end
+
+# create docker network
+docker_network 'dev-net-external' do
+	action :create
+end
