@@ -31,7 +31,7 @@
       "available": [
         {
           "container_name": "lcl-cnt-svc-001",
-          "container_network": "lcl-net",
+          "container_network": "dev-net",
           "container_port": ["18443:8443", "18000:8000"],
           "container_webapp": "/dev/containers/lcl-cnt-svc-001/softwares/tomcat-a/webapps/",
           "container_appconfig": "/dev/containers/lcl-cnt-svc-001/softwares/appconfig",
@@ -44,7 +44,7 @@
         },
         {
           "container_name": "lcl-cnt-svc-002",
-          "container_network": "lcl-net",
+          "container_network": "dev-net",
           "container_port": ["28443:8443", "28000:8000"],
           "container_webapp": "/dev/containers/lcl-cnt-svc-002/softwares/tomcat-a/webapps/",
           "container_appconfig": "/dev/containers/lcl-cnt-svc-002/softwares/appconfig",
@@ -64,12 +64,12 @@
       "available": [
         {
           "container_name": "lcl-cnt-mon-001",
-          "container_network": "lcl-net",
+          "container_network": "dev-net",
           "container_port": ["27017:27017"]
         },
         {
           "container_name": "lcl-cnt-mon-002",
-          "container_network": "lcl-net",
+          "container_network": "dev-net",
           "container_port": ["17017:27017"]
         }
       ],
@@ -81,7 +81,7 @@
       "available": [
         {
           "container_name": "lcl-cnt-wbs-001",
-          "container_network": "lcl-net",
+          "container_network": "dev-net",
           "container_port": ["50443:443"]
         }
       ],
@@ -93,7 +93,7 @@
       "available": [
         {
           "container_name": "lcl-cnt-spring-001",
-          "container_network": "lcl-net",
+          "container_network": "dev-net",
           "container_port": ["9000:9000"]
         }
       ],

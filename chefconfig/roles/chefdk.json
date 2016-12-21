@@ -1,0 +1,17 @@
+{
+  "name": "chefdk",
+  "description": "Chefdk Role for Nodes",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+
+  },
+  "override_attributes": {
+
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[dev_chefdk_cb::chefdk_repository_sync]"
+  ],
+  "env_run_lists": {
+  }
+}
