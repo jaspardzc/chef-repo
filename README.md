@@ -10,6 +10,11 @@ Directory `chefconfig` contains node, roles, environments, and data bags related
 
 In the actual DevOps Environment, it is recommended to have separate reposiotories for the `chefscripts` and `chefconfig` directory. And separating the community cookbooks from development cookbooks rather than keeping them all under one single MonoRepository.
 
+Use `dev_init_cb` cookbook with `INTEGRATION` environment for the new machine/node/server environment replicating, provisioning and deployment. The `INTEGRATION` environment json files is like your new machine/node/server application stack setup guideline. 
+
+After all containers are running fine on the new machine/node/server environment. You can switch `INTEGRATION` environment to `DEV` environment, then using entity-based cookbook for your customized continuous deployment.
+Each entity-based cookbook can have recipes specificly to that entity, if you prefer using role rather than do in the `The Berkshelf Way`, you can create multiple roles for multiple entities, then create a `Role-Wrapper Cookbook` for every `entity-role`, so that your role can be `verionized using wrapper cookbook`, and further be used across all envionments 
+
 For new chef node environment setup, checkout the last section of this README.
 
 Chef References
@@ -59,7 +64,7 @@ Knife is a powerful tool for communication between chef server and chef nodes, m
 Configuration
 
     ~$ knife configure -i
-    ~$ knife ssl fetch
+    ~$ knife ssl fetch      
     ~$ knife ssl check
     ~$ knife client list
     ~$ knife 
@@ -300,7 +305,7 @@ Chef Development Workstation (ChefDK)
 3. same as Chef Client configuration, see below
 Chef Client(Chef Node)
 ----------------------
-1. install the Chef.xxx.rpm, check Linux/Unix version on the chef official website, login the chefserver admin UI, create a client and download new client pem key, put at `/root/.chef/client.pem`
+1. install the Chef.xxx.rpm, check Linux/Unix version on the chef official website, login the chefserver admin UI, create a client and download new client pem key, rename it as client.pem, put at `/root/.chef/client.pem`
 2. add ruby and gem to the system path
 
     ```
@@ -342,6 +347,8 @@ Chef Client(Chef Node)
 
    ~/.chef/knife.rb reference
 
+   # used to keep the chef repository at `~` home directory, but the `~` is a mounted directory, will easily get out of memory when the repository code base grow, so later moved to `/dev/chef/`
+
     ```
     current_dir = File.dirname(__FILE__)
     log_level                   :info
@@ -349,7 +356,7 @@ Chef Client(Chef Node)
     node_name                   'devadmin'
     client_key                  "#{current_dir}/.chef/devadmin.pem"
     chef_server_url             'https://chefserver.example.com:443/organizations.example'
-    cookbook_path               ["#{current_dir}/../chef-repo/chefscripts/cookbooks"]
+    cookbook_path               ["/dev/chef/chef-repo/chefscripts/cookbooks"]
     ```
 
 5. create knife.rb at /etc/chef/
@@ -394,7 +401,8 @@ Chef Client(Chef Node)
 10. verify the chef-client configuration setup
 
     ```
-    ~$ knife client-list -w
+    ~$ knife client list -w
+    ~$ knife node list -w
     ```
 
 Chef Design Pattern Best Practice
