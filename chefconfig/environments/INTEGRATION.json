@@ -1,0 +1,337 @@
+{
+  "name": "INTEGRATION",
+  "description": "The platform integration environment",
+  "cookbook_versions": {
+
+  },
+  "json_class": "Chef::Environment",
+  "chef_type": "environment",
+  "default_attributes": {
+    "artifactory": {
+      "secret_key_path": "/etc/chef/artifactory_secret_key",
+      "hostname": "10.90.78.5",
+      "port": "8081",
+      "base_snapshot_url": "/artifactory/list/libs-snapshot-local",
+      "base_release_url": "/artifactory/list/libs-release-local",
+      "base_docker_registry_url": "ABN-DEV-031.dev.example.com:8082"
+    },
+    "git": {
+      "base_git_url": "xxxxxxx",
+      "secret_key_path": "/etc/chef/git_secret_key"
+    },
+    "vms": {
+      "domain_name": "DOMAIN_NAME",
+      "ABN-DEV-065.dev.example.com":  {
+        "containers": [
+          {
+            "name": "dev-eka-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "12001:8443",
+                  "13001:7443",
+                  "14001:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n'",
+                  "'PWD_OPTS=-Dserver.ssl.key-store-password=~jksstore~ -Dserver.ssl.trust-store-password=~jksstore~'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "EurekaServer",
+              "version": "1.0.1",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": true,
+            "requires_external_certs": true
+          },
+          {
+            "name": "dev-cnf-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "12002:8443",
+                  "13002:7443",
+                  "14002:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n'",
+                  "'PWD_OPTS=-Dserver.ssl.key-store-password=~jksstore~ -Dserver.ssl.trust-store-password=~jksstore~ -Dmanagement.ssl.key-store-password=~jksstore~ -Dmanagement.ssl.trust-store-password=~jksstore~'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "ConfigServer",
+              "version": "1.0.1",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": true,
+            "requires_external_certs": true
+          },
+          {
+            "name": "dev-uig-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "12007:8443",
+                  "13007:7443",
+                  "14007:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "UIGateway",
+              "version": "1.0.2",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": true,
+            "requires_external_certs": true
+          },
+          {
+            "name": "dev-sts-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "12003:8443",
+                  "13003:7443",
+                  "14003:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "SVCTokenServer",
+              "version": "1.0.2",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": true,
+            "requires_external_certs": true
+          },
+          {
+            "name": "dev-svg-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "12004:8443",
+                  "13004:7443",
+                  "14004:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "SVCGateway",
+              "version": "1.0.2",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": true,
+            "requires_external_certs": true
+          },
+          {
+            "name": "dev-mts-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "12005:8443",
+                  "13005:7443",
+                  "14005:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n",
+                  "'PWD_OPTS=-Dserver.ssl.key-store-password=~jksstore~ -Dserver.ssl.trust-store-password=~jksstore~ -Dmanagement.ssl.key-store-password=~jksstore~ -Dmanagement.ssl.trust-store-password=~jksstore~'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "MasheryTokenServer",
+              "version": "1.0.1",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": false,
+            "requires_external_certs": true
+          },
+          {
+            "name": "dev-mhs-001",
+            "container_params": {
+               "image": {
+                  "name": "ABN-DEV-031.dev.example.com:8082/stdspringbootbox",
+                  "tag": "1.0"
+                },
+                "memory": "1g",
+                "memory_swap": "2g",
+                "port": [
+                  "40443:8443",
+                  "13006:7443",
+                  "14006:8000"
+                ],
+                "env": [
+                  "'JAVA_OTH_OPTS=-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n'",
+                  "'PWD_OPTS=-Dserver.ssl.key-store-password=~jksstore~ -Dserver.ssl.trust-store-password=~jksstore~ -Dmanagement.ssl.key-store-password=~jksstore~ -Dmanagement.ssl.trust-store-password=~jksstore~'"
+                ]
+            },
+            "deployable": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "artifactId": "MasheryServer",
+              "version": "1.0.1",
+              "datestamp": "",
+              "extension": ".jar",
+              "directory": "/softwares/app"
+            },
+            "config": {
+              "groupId": "/com/example/PROJECT_NAME/",
+              "version": "1.0.0",
+              "datestamp": "",
+              "extension": ".zip",
+              "directories": {
+                "config": "/softwares/app",
+                "endorsed": "/softwares/app"
+              }
+            },
+            "delay_before_stop": 3,
+            "delay_after_start": 5,
+            "reinstall_app": true,
+            "reinstall_container": true,
+            "requires_internal_certs": false,
+            "requires_external_certs": true
+          }
+        ]
+      }
+    }
+  },
+  "override_attributes": {
+  }
+}

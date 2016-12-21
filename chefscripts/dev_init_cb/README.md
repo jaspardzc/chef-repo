@@ -1,4 +1,4 @@
-# dev_test_cb
+# dev_init_cb
 
 TODO: Enter the cookbook description here.
 

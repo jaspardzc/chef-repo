@@ -1,8 +1,15 @@
 {
   "name": "DEV-NODE-003.com.demo",
-  "chef_environment": "DEV",
+  "chef_environment": "INTEGRATION",
   "run_list": [
-    "role[common]"
+    "recipe['dev_init_cb::chefnode_attributes_init@0.1.0']",
+    "recipe['dev_init_cb::chefnode_directories_init@0.1.0']",
+    "recipe['dev_init_cb::chefnode_networks_init@0.1.0']",
+    "recipe['dev_init_cb::chefnode_repository_init@0.1.0']",
+    "recipe['dev_init_cb::chefnode_ssl_init@0.1.0']",
+    "recipe['dev_init_cb::containers_provision_init@0.1.0']",
+    "recipe['dev_init_cb::containers_deployment_init@0.1.0']",
+    "recipe['dev_init_cb::containers_restart_init@0.1.0']"
   ]
   ,
   "normal": {

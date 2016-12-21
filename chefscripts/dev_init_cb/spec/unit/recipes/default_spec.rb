@@ -1,12 +1,12 @@
 #
-# Cookbook Name:: dev_test_cb
+# Cookbook Name:: dev_init_cb
 # Spec:: default
 #
 # Copyright (c) 2016 The Authors, All Rights Reserved.
 
 require 'spec_helper'
 
-describe 'dev_test_cb::default' do
+describe 'dev_init_cb::default' do
   context 'When all attributes are default, on an unspecified platform' do
     let(:chef_run) do
       runner = ChefSpec::ServerRunner.new
