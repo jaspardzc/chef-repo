@@ -12,9 +12,9 @@
 require 'docker'
 
 # Local Variables
-server_net = "lcl-net-server"
-app_net = "lcl-net-app"
-db_net = "lcl-net-db"
+server_net = "dev-net-server"
+app_net = "dev-net-app"
+db_net = "dev-net-db"
 
 # create server network
 docker_network "#{server_net}" do

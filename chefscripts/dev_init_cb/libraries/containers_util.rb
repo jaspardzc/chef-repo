@@ -7,14 +7,12 @@
 #          getConfigRemoteUrl
 #          isDeployableChanged
 #          isConfigChanged
-#          isExternalCertificateChanged
-#          isInternalCertificateChanged
 #          isArtifactSame
 #          isContainerParamsChanged
-#          getNodeContainerName
-#          getNodeContainerDeployable
-#          getNodeContainerConfig
-#          getNodeContainerParams
+#          isContainerReinstallRequired
+#          isContainerExist
+#          getContainerCreationCommand
+#          replaceStringBasedOnRegex
 # Copyright (c) 2016 The Auhtors, All Rights Reserved
 # Last Updated: 12/20/2016
 # Author: kevin.zeng
@@ -23,7 +21,6 @@
 # manage dependencies
 require 'docker'
 require 'set'
-
 
 class ContainerStateManager 
 
@@ -36,9 +33,9 @@ class ContainerStateManager
     def getDeployableLocalUrl ( container )
 
             if container['deployable']['datestamp'] == ""
-               deployable_localurl = "/tzf/containers/#{container['name']}#{container['deployable']['directory']}/#{container['deployable']['artifactId']}-#{container['deployable']['version']}#{container['deployable']['extension']}"
+               deployable_localurl = "/dev/containers/#{container['name']}#{container['deployable']['directory']}/#{container['deployable']['artifactId']}-#{container['deployable']['version']}#{container['deployable']['extension']}"
             else
-               deployable_localurl = "/tzf/containers/#{container['name']}#{container['deployable']['directory']}/#{container['deployable']['artifactId']}-#{container['deployable']['version']}-#{container['deployable']['datestamp']}#{container['deployable']['extension']}"
+               deployable_localurl = "/dev/containers/#{container['name']}#{container['deployable']['directory']}/#{container['deployable']['artifactId']}-#{container['deployable']['version']}-#{container['deployable']['datestamp']}#{container['deployable']['extension']}"
             end
 
             return deployable_localurl
@@ -61,9 +58,9 @@ class ContainerStateManager
     def getConfigLocalUrl ( container )
 
             if container['config']['datestamp'] == ""
-               config_localurl = "/tzf/containers/#{container['name']}/#{container['name']}-#{container['config']['version']}#{container['config']['extension']}"
+               config_localurl = "/dev/containers/#{container['name']}/#{container['name']}-#{container['config']['version']}#{container['config']['extension']}"
             else 
-               config_localurl = "/tzf/containers/#{container['name']}/#{container['name']}-#{container['config']['version']}-#{container['config']['datestamp']}#{container['config']['extension']}"
+               config_localurl = "/dev/containers/#{container['name']}/#{container['name']}-#{container['config']['version']}-#{container['config']['datestamp']}#{container['config']['extension']}"
             end
             return config_localurl
     end
@@ -100,26 +97,6 @@ class ContainerStateManager
             return isArtifactSame(currentState['containers']["#{toBeState['name']}"]['current_config'], toBeState['config'])
         else
             return true
-        end
-    end
-
-    # check if external certificate is changed
-    def isExternalCertificateChanged ( currentState, toBeState ) 
-        if (defined?currentState['containers']["#{toBeState['name']}"])
-            if (currentState['containers']["#{toBeState['name']}"]['external_certs_status'] == "received") &&
-               (toBeState['requires_external_certs'] == true) 
-                return true
-            end
-        end
-    end
-
-    # check if internal certificate is changed
-    def isInternalCertificateChanged ( currentState, toBeState ) 
-        if (defined?currentState['containers']["#{toBeState['name']}"])
-            if (currentState['containers']["#{toBeState['name']}"]['internal_certs_status'] == "received") &&
-               (toBeState['requires_internal_certs'] == true)
-                return true
-            end
         end
     end
 
@@ -187,19 +164,8 @@ class ContainerStateManager
             env = replaceStringBasedOnRegex(env, regex, password["#{key}"])
             env_string = "#{env_string}-e #{env} "
         end
-        command = "docker create --name=#{container['name']} -h #{container['name']}.#{domain_name} -m #{container['container_params']['memory']} --memory-swap=#{container['container_params']['memory_swap']} -i -t -u tzfadmin #{port_string} -v /tzf/containers/certs:/tzfcerts -v /tzf/containers/#{container['name']}:/tzfext -v /backup/containers/#{container['name']}:/backup #{env_string} --net lcl-net --log-opt max-size=2m --net-alias=#{container['name']}.#{domain_name} #{container['container_params']['image']['name']}:#{container['container_params']['image']['tag']}"
+        command = "docker create --name=#{container['name']} -h #{container['name']}.#{domain_name} -m #{container['container_params']['memory']} --memory-swap=#{container['container_params']['memory_swap']} -i -t -u devadmin #{port_string} -v /dev/containers/certs:/devcerts -v /dev/containers/#{container['name']}:/devext -v /backup/containers/#{container['name']}:/backup #{env_string} --net dev-net --log-opt max-size=2m --net-alias=#{container['name']}.#{domain_name} #{container['container_params']['image']['name']}:#{container['container_params']['image']['tag']}"
         return command
-    end
-
-    # util method for converting containerList to a simple containerSet
-    # and the containerSet only contains container's name
-    def getNodeContainerName ( containerList )
-        # linting the cntainer list to container set
-        containerSet = Set.new()
-        containerList.each do |container|
-            containerSet.add?(container['name'])
-        end
-        return containerSet
     end
 
     # replace string placeholder based on unique value and regex pattern

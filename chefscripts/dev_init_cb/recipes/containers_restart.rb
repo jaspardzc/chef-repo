@@ -7,3 +7,4 @@
 # Author: kevin.zeng
 #####################################################################################
 
+# PENDING, RESTART THE CONTAINERS IF THE CONTAINER STATUS IS NOT RUNNING

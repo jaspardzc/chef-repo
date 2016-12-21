@@ -163,8 +163,8 @@ containers.each do |container|
     docker_container 'stop container for deployment' do
         container_name container['name']
         only_if {
-            containersUtil.isInternalCertificateChanged(node['node_status'], container) ||
-            containersUtil.isExternalCertificateChanged(node['node_status'], container) ||
+            chefnodeUtil.isInternalCertificateChanged(node['node_status'], container) ||
+            chefnodeUtil.isExternalCertificateChanged(node['node_status'], container) ||
             containersUtil.isDeployableChanged(node['node_status'], container) ||
             containersUtil.isConfigChanged(node['node_status'], container)
         }
@@ -178,8 +178,8 @@ containers.each do |container|
         mode '0755'
         path "/dev/containers/#{container['name']}/cert.lock"
         only_if { 
-            containersUtil.isInternalCertificateChanged(node['node_status'], container) || 
-            containersUtil.isExternalCertificateChanged(node['node_status'], container) 
+            chefnodeUtil.isInternalCertificateChanged(node['node_status'], container) || 
+            chefnodeUtil.isExternalCertificateChanged(node['node_status'], container) 
         }
         action :delete
     end
@@ -264,8 +264,8 @@ containers.each do |container|
     docker_container 'start container' do 
         container_name container['name']
         only_if {
-            containersUtil.isInternalCertificateChanged(node['node_status'], container) ||
-            containersUtil.isExternalCertificateChanged(node['node_status'], container) ||
+            chefnodeUtil.isInternalCertificateChanged(node['node_status'], container) ||
+            chefnodeUtil.isExternalCertificateChanged(node['node_status'], container) ||
             containersUtil.isDeployableChanged(node['node_status'], container) ||
             containersUtil.isConfigChanged(node['node_status'], container) ||
             container['reinstall_app'] == true
@@ -289,7 +289,7 @@ end
 # set node status
 ruby_block 'set node status' do
     block do
-        node.normal['node_status']['current_container_set'] = containersUtil.getNodeContainerName(containers).to_a
+        node.normal['node_status']['current_container_set'] = chefnodeUtil.getNodeContainerName(containers).to_a
     end
     action :run
 end
