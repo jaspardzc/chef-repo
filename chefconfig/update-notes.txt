@@ -1,0 +1,47 @@
+######## Chef Environment File Grows Bigger Fast
+
+Environment 1
+ - node 1
+ - node 2
+
+Environment 2
+ - node 3
+ - node 4
+
+Environment 3
+ - node a
+ - node b
+ - node c
+ - node d
+ - node e
+ - node f
+ - node g
+ - ....
+
+When there are multiple mirrored or replicated nodes sharing the same environment config file, the config file grows big quickly, it is not very efficient for large JSON file to be parsed during the deployment process for just one node
+
+So instead of keeping the entire node array details inside environment file, we can assign one unique role for every node, keep environment simple
+
+Include the role as the first entry in the default runlist for every node
+
+knife node run_list add XXX-XXX-XXX-077.dev.demo.com \
+'role[platform-dev-077]'
+
+Similarly, we can have following roles
+- role[poc-084]
+- role[poc-088]
+- role[poc-089]
+
+So that going forward, the environment file will keep simple and usually unchanged, unless there is a need for artifactory, git configuration changes, etc
+
+Team will be working on updating roles, each role represents the deployment and configuration plan for this specific node
+	- platform-dev-077
+	- poc-084
+	- poc-088
+	- poc-089
+	
+To update the role from file:
+~$ knife role from file /DEV/chef/chef-repo/chefnodes/roles/platform-dev-077.json
+
+And do not forget clean the environment:
+~$ knife environment from file /DEV/chef/chef-repo/chefnodes/environments/platform-dev.json
