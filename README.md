@@ -275,10 +275,10 @@ Chef Server
 7. generate PEM files for authentication with chef client
 
     ```
-    ~$ chef-server-ctl user-create admin admin admin admin@trizetto.com 'admin123' --filename admin.pem
-    ~$ chef-server-ctl org-create trizetto 'TriZetto Inc' --association_user admin --filename trizetto-validator.pem
-    ~$ chef-server-ctl user-create devadmin dev admin devadmin@trizetto.com 'devadmin' --filename /etc/chef/devadmin.pem
-    ~$ chef-server-ctl org-user-add trizetto devadmin
+    ~$ chef-server-ctl user-create admin admin admin admin@example.com 'admin123' --filename admin.pem
+    ~$ chef-server-ctl org-create example 'Example Inc' --association_user admin --filename example-validator.pem
+    ~$ chef-server-ctl user-create devadmin dev admin devadmin@example.com 'devadmin' --filename /etc/chef/devadmin.pem
+    ~$ chef-server-ctl org-user-add example devadmin
     ```
 
 8. install the chef manage
